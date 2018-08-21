@@ -2,4 +2,8 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/Code/EasyWord/bin/Debug
+/Code/EasyWord.Core/bin/Debug
+/Code/EasyWord.Core/obj/Debug
+/Code/EasyWord.Test/obj/Debug
+/Code/.vs/EasyWord/v15
+/Code/EasyWord.Test/bin/Debug

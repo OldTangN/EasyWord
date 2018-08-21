@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="SelBtnTxt">Select File</sys:String>
+    <sys:String x:Key="WinTitle">Test</sys:String>
+    <sys:String x:Key="SaveBtnTxt">Save</sys:String>
+    <sys:String x:Key="BookMarkHeader">BookMarks</sys:String>
+    <sys:String x:Key="BookMarkValue">Values</sys:String>
+</ResourceDictionary>

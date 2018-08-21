@@ -1,0 +1,19 @@
+﻿<Window x:Class="EasyWord.Test.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyWord.Test"
+        mc:Ignorable="d"
+        Title="{StaticResource WinTitle}" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="btnSelectFile" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="48,38,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Click"/>
+        <Button x:Name="btnSave" Content="{StaticResource SaveBtnTxt}" HorizontalAlignment="Left" Margin="48,87,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSave_Click"/>
+        <DataGrid x:Name="dgBookMarks" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="195" VerticalAlignment="Top" Width="397" Margin="221,38,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{StaticResource BookMarkHeader}" Binding="{Binding Path=Name}" IsReadOnly="True" MinWidth="100"></DataGridTextColumn>
+                <DataGridTextColumn Header="{StaticResource BookMarkValue}" Binding="{Binding Path=Value}" IsReadOnly="False" MinWidth="100"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
