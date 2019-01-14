@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿//using Word = Microsoft.Office.Tools.Word;
+using EasyWord.Core;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,9 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MSWord = Microsoft.Office.Interop.Word;
-//using Word = Microsoft.Office.Tools.Word;
-using EasyWord.Core;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace EasyWord.Test
 {
@@ -30,29 +30,37 @@ namespace EasyWord.Test
             InitializeComponent();
         }
 
-        string TemplateFile = "";
-
-        private void btnSelectFile_Click(object sender, RoutedEventArgs e)
+        private string SelectFile()
         {
-            TemplateFile = "";
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Word文档|*.docx|Word97-2003文档|*doc";
             dialog.Multiselect = false;
             if (!dialog.ShowDialog().GetValueOrDefault())
             {
-                return;
+                return null;
             }
-            TemplateFile = dialog.FileName;
+            return dialog.FileName;
+        }
+
+        private string TemplateFile = "";
+
+        private void btnSelectFile_Click(object sender, RoutedEventArgs e)
+        {
+            TemplateFile = "";
+            TemplateFile = SelectFile();
             Load(TemplateFile);
         }
 
-        object Nothing = System.Reflection.Missing.Value;
+        private object Nothing = System.Reflection.Missing.Value;
 
-        void Save(string templateFile)
+        private void Save(string templateFile)
         {
-            
+            if (string.IsNullOrEmpty(templateFile))
+            {
+                return;
+            }
             //创建一个Word应用程序实例 
-            MSWord.Application app = new MSWord.ApplicationClass();
+            Word.Application app = new Word.ApplicationClass();
             //无法嵌入互操作类型“Microsoft.Office.Interop.Word.ApplicationClass”。请改用适用的接口
             //将dll属性中的“嵌入互操作类型”的值改为“false”即可
             try
@@ -65,9 +73,9 @@ namespace EasyWord.Test
                 object path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Format("{0:yyyy-MM-dd HH-mm-ss}{1}", DateTime.Now, fileInfo.Extension));
                 System.IO.File.Copy(templatepath, path.ToString());
                 //以模板为基础生成文档
-                MSWord.Document doc = app.Documents.Add(ref path);
-                //获取书签数组  
-                foreach (MSWord.Bookmark item in doc.Bookmarks)
+                Word.Document doc = app.Documents.Add(ref path);
+                //获取书签数组
+                foreach (Word.Bookmark item in doc.Bookmarks)
                 {
                     BookMark mark = lstBookMarks.FirstOrDefault(p => p.Name == item.Name);
                     if (mark != null)
@@ -105,13 +113,13 @@ namespace EasyWord.Test
                 }
                 if (fileInfo.Extension == ".docx")
                 {
-                    doc.SaveAs(path, MSWord.WdSaveFormat.wdFormatDocumentDefault, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+                    doc.SaveAs(path, Word.WdSaveFormat.wdFormatDocumentDefault, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
                 }
                 else
                 {
-                    doc.SaveAs(path, MSWord.WdSaveFormat.wdFormatDocument, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+                    doc.SaveAs(path, Word.WdSaveFormat.wdFormatDocument, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
                 }
-               
+
                 doc.Close();
                 MessageBox.Show("1111");
             }
@@ -138,17 +146,21 @@ namespace EasyWord.Test
             Save(TemplateFile);
         }
 
-        List<BookMark> lstBookMarks = new List<BookMark>();
+        private List<BookMark> lstBookMarks = new List<BookMark>();
 
-        void Load(string templateFile)
+        private void Load(string templateFile)
         {
+            if (string.IsNullOrEmpty(templateFile))
+            {
+                return;
+            }
             object objFile = templateFile;
-           
-            MSWord.Application app = new MSWord.ApplicationClass();
+
+            Word.Application app = new Word.ApplicationClass();
             try
             {
-                MSWord.Document doc = app.Documents.Add(ref objFile);
-                foreach (MSWord.Bookmark item in doc.Bookmarks)
+                Word.Document doc = app.Documents.Add(ref objFile);
+                foreach (Word.Bookmark item in doc.Bookmarks)
                 {
                     lstBookMarks.Add(new BookMark(item.Name));
                 }
@@ -157,13 +169,67 @@ namespace EasyWord.Test
             catch (Exception)
             {
             }
-           finally
+            finally
             {
                 //Close wordApp Component
                 app.Quit(ref Nothing, ref Nothing, ref Nothing);
             }
             dgBookMarks.ItemsSource = lstBookMarks;
+        }
 
+        private void btnReplace_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(File_Replace))
+            {
+                return;
+            }
+            object objFile = File_Replace;
+            Word.Application app = new Word.ApplicationClass();
+            try
+            {
+                //设置为不可见
+                app.Visible = false;
+                Word.Document doc = doc = app.Documents.Open(ref objFile,
+                ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+                object replace = Word.WdReplace.wdReplaceAll;
+
+                app.Selection.Find.Replacement.ClearFormatting();
+                app.Selection.Find.ClearFormatting();
+                app.Selection.Find.Text = txtReplaceFrom.Text.Replace(Environment.NewLine,"^p");//需要被替换的文本
+                app.Selection.Find.Replacement.Text = txtReplaceTo.Text.Replace(Environment.NewLine, "^p");//替换文本 
+
+                //执行替换操作
+                app.Selection.Find.Execute(
+                ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing, ref Nothing,
+                ref Nothing, ref replace,
+                ref Nothing, ref Nothing,
+                ref Nothing, ref Nothing);
+
+                doc.Save();
+                doc.Close();
+                MessageBox.Show("替换完毕!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                //Close wordApp Component
+                app.Quit(ref Nothing, ref Nothing, ref Nothing);
+            }
+        }
+
+        private string File_Replace = "";
+
+        private void btnSelectFile_Replace_Click(object sender, RoutedEventArgs e)
+        {
+            File_Replace = SelectFile();
         }
     }
 }

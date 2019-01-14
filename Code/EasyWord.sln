@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyWord.Core", "EasyWord.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyWord.Test", "EasyWord.Test\EasyWord.Test.csproj", "{103D9524-04D0-45A5-9397-016B3E848BBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyWord.UI", "EasyWord.UI\EasyWord.UI.csproj", "{7B2D068B-AC72-48D9-9C8F-5AF69BAA1390}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{103D9524-04D0-45A5-9397-016B3E848BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{103D9524-04D0-45A5-9397-016B3E848BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{103D9524-04D0-45A5-9397-016B3E848BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B2D068B-AC72-48D9-9C8F-5AF69BAA1390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B2D068B-AC72-48D9-9C8F-5AF69BAA1390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B2D068B-AC72-48D9-9C8F-5AF69BAA1390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B2D068B-AC72-48D9-9C8F-5AF69BAA1390}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

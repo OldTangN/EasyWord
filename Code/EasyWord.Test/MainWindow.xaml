@@ -7,13 +7,17 @@
         mc:Ignorable="d"
         Title="{StaticResource WinTitle}" Height="450" Width="800">
     <Grid>
-        <Button x:Name="btnSelectFile" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="48,38,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Click"/>
-        <Button x:Name="btnSave" Content="{StaticResource SaveBtnTxt}" HorizontalAlignment="Left" Margin="48,87,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSave_Click"/>
-        <DataGrid x:Name="dgBookMarks" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="195" VerticalAlignment="Top" Width="397" Margin="221,38,0,0">
+        <Button x:Name="btnSelectFile" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="48,18,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Click"/>
+        <Button x:Name="btnSave" Content="{StaticResource SaveBtnTxt}" HorizontalAlignment="Left" Margin="48,67,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSave_Click"/>
+        <DataGrid x:Name="dgBookMarks" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="195" VerticalAlignment="Top" Width="397" Margin="221,18,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{StaticResource BookMarkHeader}" Binding="{Binding Path=Name}" IsReadOnly="True" MinWidth="100"></DataGridTextColumn>
                 <DataGridTextColumn Header="{StaticResource BookMarkValue}" Binding="{Binding Path=Value}" IsReadOnly="False" MinWidth="100"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Button x:Name="btnReplace" Content="文本替换" HorizontalAlignment="Left" Margin="62,293,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnReplace_Click"/>
+        <TextBox Name="txtReplaceFrom" HorizontalAlignment="Left" Height="69" Margin="221,238,0,0" TextWrapping="Wrap" Text="查找" VerticalAlignment="Top" Width="397" AcceptsReturn ="True"/>
+        <TextBox Name="txtReplaceTo" HorizontalAlignment="Left" Height="69" Margin="221,335,0,0" TextWrapping="Wrap" Text="替换成" VerticalAlignment="Top" Width="397" AcceptsReturn ="True"/>
+        <Button x:Name="btnSelectFile_Replace" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="62,238,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Replace_Click"/>
     </Grid>
 </Window>
