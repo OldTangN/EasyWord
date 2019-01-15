@@ -88,7 +88,9 @@ namespace EasyWord.UI
 
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Worker_DoWork;
+            worker.ProgressChanged += Worker_ProgressChanged;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.WorkerReportsProgress = true;
             ReplacePara para = new ReplacePara()
             {
                 ReplaceDatas = replaceDic,
@@ -98,6 +100,14 @@ namespace EasyWord.UI
                 FileNameTo = txtFileTo.Text.Trim()
             };
             worker.RunWorkerAsync(para);
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage >= 0 && e.ProgressPercentage < lstFileInfo.Count)
+            {
+                tbMsg.Text = "正在处理：" + lstFileInfo[e.ProgressPercentage].FullName;
+            }
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -110,12 +120,16 @@ namespace EasyWord.UI
             }
             if ((bool)e.Result)
             {
-                MessageBox.Show("替换完毕!");
+                MessageBox.Show($"替换完毕!共计 { idx } 个文档！");
             }
         }
 
+        private List<FileInfo> lstFileInfo;
+        private int idx = 0;
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
             Dictionary<string, string> replaceDatas;//被替换、替换成的文本
             bool all;//是否同目录全部替换
             string fileFrom, fileTo;
@@ -125,7 +139,8 @@ namespace EasyWord.UI
             fileFrom = para.FileNameFrom;
             fileTo = para.FileNameTo;
 
-            List<FileInfo> lstFileInfo = new List<FileInfo>();
+            lstFileInfo = new List<FileInfo>();
+            idx = 0;
             if (all)
             {
                 FileInfo file = new FileInfo(para.FilePath);
@@ -158,6 +173,7 @@ namespace EasyWord.UI
             excelApp.Visible = false;
             foreach (FileInfo file in lstFileInfo)
             {
+                worker.ReportProgress(idx++);
                 string newPath = null;
                 if (!string.IsNullOrEmpty(fileFrom))
                 {

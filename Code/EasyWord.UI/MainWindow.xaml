@@ -10,12 +10,12 @@
         Title="{StaticResource WinTitle}" Height="450" Width="600">
     <Grid>
         <Button x:Name="btnReplace" Content="{StaticResource ReplaceBtnTxt}" HorizontalAlignment="Left" 
-                Margin="455,351,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnReplace_Click"/>
-        <Button x:Name="btnSelectFile_Replace" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="28,351,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Replace_Click"/>
+                Margin="455,311,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnReplace_Click"/>
+        <Button x:Name="btnSelectFile_Replace" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="28,311,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Replace_Click"/>
         <local:BusyIndicator x:Name="busyCtl" HorizontalAlignment="Center" VerticalAlignment="Center" Height="100" Margin="0,0,0,0" Panel.ZIndex="999"  Width="100"/>
-        <CheckBox Name="chkSelectDir" Content="替换同目录下所有word/excel文档" HorizontalAlignment="Left" Margin="153,355,0,0" VerticalAlignment="Top"/>
-        <DataGrid Name="gridReplace" CanUserAddRows="True" HorizontalAlignment="Center" AutoGenerateColumns="False"
-                  Height="240" Margin="34,20,34,0" GridLinesVisibility="All" VerticalAlignment="Top" Width="526">
+        <CheckBox Name="chkSelectDir" Content="替换同目录下所有word/excel文档" HorizontalAlignment="Left" Margin="153,315,0,0" VerticalAlignment="Top"/>
+        <DataGrid BorderBrush="LightGray" BorderThickness="1" Name="gridReplace" CanUserAddRows="True" HorizontalAlignment="Center" AutoGenerateColumns="False"
+                  Height="194" Margin="34,20,34,0" GridLinesVisibility="All" VerticalAlignment="Top" Width="526">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="查找" Width="200*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -45,11 +45,12 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="文件名替换：" HorizontalAlignment="Left" Margin="39,288,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="txtFileFrom" HorizontalAlignment="Left" Height="23" Margin="121,287,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox Name="txtFileTo" HorizontalAlignment="Left" Height="23" Margin="298,287,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <Label Content="替换成" HorizontalAlignment="Left" Margin="247,288,0,0" VerticalAlignment="Top"/>
-        <Button Name="btnAdd" Click="BtnAdd_Click" Content="添加行" HorizontalAlignment="Left" Margin="480,288,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="文件名替换：" HorizontalAlignment="Left" Margin="39,248,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="txtFileFrom" HorizontalAlignment="Left" Height="23" Margin="121,247,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="txtFileTo" HorizontalAlignment="Left" Height="23" Margin="298,247,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Label Content="替换成" HorizontalAlignment="Left" Margin="247,248,0,0" VerticalAlignment="Top"/>
+        <Button Name="btnAdd" Click="BtnAdd_Click" Content="添加行" HorizontalAlignment="Left" Margin="480,248,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBlock Name="tbMsg" HorizontalAlignment="Left" Margin="28,356,0,0" TextWrapping="Wrap" Text="信息" VerticalAlignment="Top" Width="527" Height="50"/>
 
     </Grid>
 </metro:MetroWindow>
