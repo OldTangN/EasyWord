@@ -13,7 +13,7 @@
                 Margin="455,351,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnReplace_Click"/>
         <Button x:Name="btnSelectFile_Replace" Content="{StaticResource SelBtnTxt}" HorizontalAlignment="Left" Margin="28,351,0,0" VerticalAlignment="Top" MinWidth="100" MinHeight="25" Click="btnSelectFile_Replace_Click"/>
         <local:BusyIndicator x:Name="busyCtl" HorizontalAlignment="Center" VerticalAlignment="Center" Height="100" Margin="0,0,0,0" Panel.ZIndex="999"  Width="100"/>
-        <CheckBox Name="chkSelectDir" Content="替换同目录下所有word文档" HorizontalAlignment="Left" Margin="153,355,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="chkSelectDir" Content="替换同目录下所有word/excel文档" HorizontalAlignment="Left" Margin="153,355,0,0" VerticalAlignment="Top"/>
         <DataGrid Name="gridReplace" CanUserAddRows="True" HorizontalAlignment="Center" AutoGenerateColumns="False"
                   Height="240" Margin="34,20,34,0" GridLinesVisibility="All" VerticalAlignment="Top" Width="526">
             <DataGrid.Columns>

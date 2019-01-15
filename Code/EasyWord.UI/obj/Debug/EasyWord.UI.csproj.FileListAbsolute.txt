@@ -31,3 +31,5 @@ C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\obj\Debug\EasyWord.
 C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\obj\Debug\EasyWord.UI.pdb
 C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\bin\Debug\log4net.dll
+C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\bin\Debug\Microsoft.Office.Interop.Excel.dll
+C:\workspace\Develop\Visual Studio\EasyWord\Code\EasyWord.UI\bin\Debug\Microsoft.Office.Interop.Excel.xml

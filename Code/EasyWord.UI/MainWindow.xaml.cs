@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
+using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace EasyWord.UI
@@ -43,7 +44,7 @@ namespace EasyWord.UI
         private string SelectFile()
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Word文档|*.docx|Word97-2003文档|*doc";
+            dialog.Filter = "Word97-2003文档|*.doc|Word文档|*.docx|Excel97-2003文档|*.xls|Excel文档|*.xlsx";
             dialog.Multiselect = false;
             if (!dialog.ShowDialog().GetValueOrDefault())
             {
@@ -128,51 +129,55 @@ namespace EasyWord.UI
             if (all)
             {
                 FileInfo file = new FileInfo(para.FilePath);
-
                 DirectoryInfo dir = file.Directory;
-                FileInfo[] doc97 = dir.GetFiles(".doc", SearchOption.AllDirectories);
-                FileInfo[] doc07 = dir.GetFiles(".docx", SearchOption.AllDirectories);
-                if (doc97 != null && doc97.Length > 0)
+                FileInfo[] files = dir.GetFiles("*.*", SearchOption.AllDirectories);
+                if (files != null && files.Length > 0)
                 {
-                    lstFileInfo.AddRange(doc97);
-                }
-                if (doc07 != null && doc07.Length > 0)
-                {
-                    lstFileInfo.AddRange(doc07);
+                    foreach (var f in files)
+                    {
+                        if (f.IsReadOnly || (f.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                        {
+                            continue;
+                        }
+                        if (f.Name.EndsWith(".doc") || f.Name.EndsWith(".docx") || f.Name.EndsWith(".xls") || f.Name.EndsWith(".xlsx"))
+                        {
+                            lstFileInfo.Add(f);
+                        }
+                    }
                 }
             }
             else
             {
                 lstFileInfo.Add(new FileInfo(para.FilePath));
             }
-            Word.Application app = new Word.ApplicationClass();
+
+            Word.Application wordApp = new Word.ApplicationClass();
+            Excel.Application excelApp = new Excel.ApplicationClass();
             //设置为不可见
-            app.Visible = false;
-            try
+            wordApp.Visible = false;
+            excelApp.Visible = false;
+            foreach (FileInfo file in lstFileInfo)
             {
-                foreach (FileInfo file in lstFileInfo)
+                string newPath = null;
+                if (!string.IsNullOrEmpty(fileFrom))
                 {
-                    if (string.IsNullOrEmpty(fileFrom))
-                    {
-                        WordReplace(replaceDatas, file.FullName, null, app);
-                    }
-                    else
-                    {
-                        string newPath = System.IO.Path.Combine(file.DirectoryName, file.Name.Replace(fileFrom, fileTo));
-                        WordReplace(replaceDatas, file.FullName, newPath, app);
-                    }
+                    newPath = System.IO.Path.Combine(file.DirectoryName, file.Name.Replace(fileFrom, fileTo));
+                }
+                try
+                {
+                    if (file.Name.EndsWith(".doc") || file.Name.EndsWith(".docx"))
+                        WordReplace(replaceDatas, file.FullName, newPath, wordApp);
+                    if (file.Name.EndsWith(".xls") || file.Name.EndsWith(".xlsx"))
+                        ExcelReplace(replaceDatas, file.FullName, newPath, excelApp);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("替换失败！", ex);
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error("替换失败！", ex);
-                throw ex;
-            }
-            finally
-            {
-                //Close wordApp Component
-                app.Quit(ref Nothing, ref Nothing, ref Nothing);
-            }
+            //Close App Component
+            try { wordApp.Quit(ref Nothing, ref Nothing, ref Nothing); } catch { }
+            try { excelApp.Quit(); } catch { }
             e.Result = true;
         }
 
@@ -182,6 +187,7 @@ namespace EasyWord.UI
                             ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing,
                             ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing,
                             ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+            bool delete = false;//是否删除源文件
             try
             {
                 object replace = Word.WdReplace.wdReplaceAll;
@@ -214,6 +220,19 @@ namespace EasyWord.UI
                 else
                 {
                     doc.SaveAs2(newFile);
+                    delete = true;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("保存失败！", ex);
+            }
+            finally
+            {
+                try { doc.Close(); } catch { }
+                if (delete)
+                {
                     try
                     {
                         File.Delete(objFile.ToString());
@@ -224,13 +243,64 @@ namespace EasyWord.UI
                     }
                 }
             }
+        }
+
+        private void ExcelReplace(Dictionary<string, string> replaceDic, string objFile, string newFile, Excel.Application app)
+        {
+            Excel.Workbook ew = app.Workbooks.Open(objFile, Nothing, Nothing, Nothing, Nothing, Nothing,
+                            Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing);
+            bool delete = false;//是否删除源文件
+            try
+            {
+                Excel.Worksheet ews;
+                int iEWSCnt = ew.Worksheets.Count;
+                Excel.Range oRange;
+
+                foreach (var item in replaceDic)
+                {
+                    for (int i = 1; i <= iEWSCnt; i++)
+                    {
+                        ews = (Excel.Worksheet)ew.Worksheets[i];
+                        oRange = ews.UsedRange.Find(
+                        item.Key, Nothing, Nothing,
+                        Nothing, Nothing, Excel.XlSearchDirection.xlNext,
+                        Nothing, Nothing, Nothing);
+                        if (oRange != null && oRange.Cells.Rows.Count >= 1 && oRange.Cells.Columns.Count >= 1)
+                        {
+                            oRange.Replace(item.Key, item.Value, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing);
+                            ew.Save();
+                        }
+                    }
+                }
+
+                if (newFile == null || newFile.ToString() == objFile.ToString())
+                {
+                    ew.Save();
+                }
+                else
+                {
+                    ew.SaveAs(newFile);
+                    delete = true;
+                }
+            }
             catch (Exception ex)
             {
                 Log.Error("保存失败！", ex);
             }
             finally
             {
-                try { doc.Close(); } catch { }
+                try { ew.Close(); } catch { }
+                if (delete)
+                {
+                    try
+                    {
+                        File.Delete(objFile.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("删除失败！", ex);
+                    }
+                }
             }
         }
 
